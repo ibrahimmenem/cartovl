@@ -1,148 +1,174 @@
 <!DOCTYPE html>
-<html><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>Population and Area equivalents | CARTO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="UTF-8">
-  <!-- Include CARTO VL JS -->
-  <script src="https://libs.cartocdn.com/carto-vl/v0.5.0-beta.2/carto-vl.js"></script>
-  <!-- Include Mapbox GL JS -->
-  <script src="https://libs.cartocdn.com/mapbox-gl/v0.45.0-carto1/mapbox-gl.js"></script>
-  <!-- Include Mapbox GL CSS -->
-  <link href="https://libs.cartocdn.com/mapbox-gl/v0.45.0-carto1/mapbox-gl.css" rel="stylesheet" />
-  <link href="https://carto.com/developers/carto-vl/examples/maps/style.css" rel="stylesheet">
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Population and Area equivalents | CARTO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <!-- Include CARTO VL JS -->
+    <script src="https://libs.cartocdn.com/carto-vl/v0.5.0-beta.2/carto-vl.js"></script>
+    <!-- Include Mapbox GL JS -->
+    <script src="https://libs.cartocdn.com/mapbox-gl/v0.45.0-carto1/mapbox-gl.js"></script>
+    <!-- Include Mapbox GL CSS -->
+    <link href="https://libs.cartocdn.com/mapbox-gl/v0.45.0-carto1/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://carto.com/developers/carto-vl/examples/maps/style.css" rel="stylesheet">
 </head>
+
 <body>
-  <div id="map" class="mapboxgl-map"><div class="mapboxgl-missing-css">Missing Mapbox GL JS CSS</div><div class="mapboxgl-canvas-container mapboxgl-interactive mapboxgl-touch-drag-pan"><canvas class="mapboxgl-canvas" style="position: absolute; width: 1299px; height: 639px;" tabindex="0" aria-label="Map" width="1299" height="639"></canvas></div><div class="mapboxgl-control-container"><div class="mapboxgl-ctrl-top-left"></div><div class="mapboxgl-ctrl-top-right"></div><div class="mapboxgl-ctrl-bottom-left"><div class="mapboxgl-ctrl" style="display: none;"><a class="mapboxgl-ctrl-logo" target="_blank" href="https://www.mapbox.com/" aria-label="Mapbox logo"></a></div></div><div class="mapboxgl-ctrl-bottom-right"><div class="mapboxgl-ctrl mapboxgl-ctrl-attrib"><a href="http://carto.com/" target="_blank">© CARTO</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap contributors</a></div></div></div></div>
-  <aside class="toolbox">
-    <div class="box" id="controlbox">
-      <header>
-        <h5>Click country to highlight countries with equivalent population or area</h5>
-      </header>
-      <section>
-<form>
-  <input onclick="resetLayer()" name="myoption" id="population" checked="checked" type="radio">Population<br>
-  <input onclick="resetLayer()" name="myoption" id="area" type="radio">Area
-</form>
-      </section>
-      <footer class="js-footer"></footer>
+    <div id="map" class="mapboxgl-map">
+        <div class="mapboxgl-missing-css">Missing Mapbox GL JS CSS</div>
+        <div class="mapboxgl-canvas-container mapboxgl-interactive mapboxgl-touch-drag-pan"><canvas class="mapboxgl-canvas" style="position: absolute; width: 1299px; height: 639px;" tabindex="0" aria-label="Map" width="1299" height="639"></canvas></div>
+        <div class="mapboxgl-control-container">
+            <div class="mapboxgl-ctrl-top-left"></div>
+            <div class="mapboxgl-ctrl-top-right"></div>
+            <div class="mapboxgl-ctrl-bottom-left">
+                <div class="mapboxgl-ctrl" style="display: none;"><a class="mapboxgl-ctrl-logo" target="_blank" href="https://www.mapbox.com/" aria-label="Mapbox logo"></a></div>
+            </div>
+            <div class="mapboxgl-ctrl-bottom-right">
+                <div class="mapboxgl-ctrl mapboxgl-ctrl-attrib"><a href="http://carto.com/" target="_blank">© CARTO</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap contributors</a></div>
+            </div>
+        </div>
     </div>
-  </aside>
-  <div id="loader" style="opacity: 0;">
-    <div class="CDB-LoaderIcon CDB-LoaderIcon--big">
-      <svg class="CDB-LoaderIcon-spinner" viewBox="0 0 50 50">
+    <aside class="toolbox">
+        <div class="box" id="controlbox">
+            <header>
+                <h5>Click country to highlight countries with equivalent sum of opulation or area</h5>
+            </header>
+            <section>
+                <form>
+                    <input onclick="resetLayer()" name="myoption" id="population" checked="checked" type="radio">Population<br>
+                    <input onclick="resetLayer()" name="myoption" id="area" type="radio">Area
+                </form>
+            </section>
+            <footer class="js-footer"></footer>
+        </div>
+    </aside>
+    <div id="loader" style="opacity: 0;">
+        <div class="CDB-LoaderIcon CDB-LoaderIcon--big">
+            <svg class="CDB-LoaderIcon-spinner" viewBox="0 0 50 50">
         <circle class="CDB-LoaderIcon-path" cx="25" cy="25" r="20" fill="none"></circle>
       </svg>
+        </div>
     </div>
-  </div>
-<style>
-#controlbox {
-    opacity: 0.5;
-}
+    <style>
+        #controlbox {
+            opacity: 0.5;
+        }
 
-#controlbox:hover {
-    opacity: 1;
-}
-</style>
-  <script>
-    var source2, total_sum;
-    document.getElementById("population").checked = true;
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-      center: [0, 30],
-      zoom: 1.5,
-      scrollZoom: true,
-      dragRotate: false,
-      touchZoomRotate: false,
-    });
+        #controlbox:hover {
+            opacity: 1;
+        }
+    </style>
+    <script>
+        var source2, total_sum;
+        document.getElementById("population").checked = true;
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+            center: [0, 30],
+            zoom: 1.8,
+            scrollZoom: true,
+            dragRotate: false,
+            touchZoomRotate: false,
+        });
 
-    // Define user
-    carto.setDefaultAuth({
-      user: 'ibrahim-carto',
-      apiKey: 'RNim3HommUzlabsDCi1NrQ'
-    });
+        // Define user
+        carto.setDefaultAuth({
+            user: 'ibrahim-carto',
+            apiKey: 'RNim3HommUzlabsDCi1NrQ'
+        });
 
-    // Define layer
-    const s = carto.expressions;
-    const source = new carto.source.Dataset('world_borders');
-    const viz = new carto.Viz(`
+        // Define layer
+        const s = carto.expressions;
+        const source = new carto.source.Dataset('world_borders');
+        const viz = new carto.Viz(`
       @population: $pop2005
       @area: $area
       color: opacity(ramp(linear(log(@population/@area),1,10), Sunset), 0.7)
     `);
-    const layer = new carto.Layer('layer', source, viz);
-    layer.addTo(map, 'watername_ocean');
-    layer.on('loaded', hideLoader);
+        const layer = new carto.Layer('layer', source, viz);
+        layer.addTo(map, 'watername_ocean');
+        layer.on('loaded', hideLoader);
 
-    const source3 = new carto.source.SQL(`SELECT * FROM (SELECT  *, SUM(pop2005) OVER (ORDER BY pop2005) total FROM world_borders WHERE name <> 'Antarctica') a WHERE total <1`, {
-      apiKey: 'RNim3HommUzlabsDCi1NrQ',
-      user: 'ibrahim-carto'
-    });
+        const source3 = new carto.source.SQL(`SELECT * FROM (SELECT  *, SUM(pop2005) OVER (ORDER BY pop2005) total FROM world_borders WHERE name <> 'Antarctica') a WHERE total <1`, {
+            apiKey: 'RNim3HommUzlabsDCi1NrQ',
+            user: 'ibrahim-carto'
+        });
 
-    const viz3 = new carto.Viz(`
+        const viz3 = new carto.Viz(`
       filter: false
     `);
-    const layer2 = new carto.Layer('layer2', source3, viz3);
-    layer2.addTo(map, 'watername_ocean');
-    layer2.on('loaded', hideLoader);
+        const layer2 = new carto.Layer('layer2', source3, viz3);
+        layer2.addTo(map, 'watername_ocean');
+        layer2.on('loaded', hideLoader);
 
-    const interactivity = new carto.Interactivity(layer);
-    interactivity.on('featureClick', e => {
+        const interactivity = new carto.Interactivity(layer);
+        interactivity.on('featureLeave', e => {
+            const feat = e.features[0];
+            if (feat) {
+                console.log(feat);
+                feat.color.reset();
+            }
+        });
+        interactivity.on('featureClick', e => {
 
-    try{
-      if (document.getElementById("population").checked){
+            try {
+                e.features[0].color.blendTo(s.namedColor('OrangeRed'), 250);
 
-          total_sum = e.features[0].variables.population._properties.pop2005
-          source2 = new carto.source.SQL(`SELECT * FROM (SELECT  *, SUM(pop2005) OVER (ORDER BY pop2005) total FROM world_borders WHERE name <> 'Antarctica') a WHERE  total <=` + total_sum, {
-            apiKey: 'RNim3HommUzlabsDCi1NrQ',
-            user: 'ibrahim-carto'
-          });
+                if (document.getElementById("population").checked) {
 
-        }else{
+                    total_sum = e.features[0].variables.population._properties.pop2005
+                    source2 = new carto.source.SQL(`SELECT * FROM (SELECT  *, SUM(pop2005) OVER (ORDER BY pop2005) total FROM world_borders WHERE name <> 'Antarctica') a WHERE  total <=` + total_sum, {
+                        apiKey: 'RNim3HommUzlabsDCi1NrQ',
+                        user: 'ibrahim-carto'
+                    });
 
-          total_sum = e.features[0].variables.area._properties.area
+                } else {
 
-          source2 = new carto.source.SQL(`SELECT * FROM (SELECT  *, SUM(area) OVER (ORDER BY area) total FROM world_borders WHERE name <> 'Antarctica') a WHERE total <=` + total_sum, {
-            apiKey: 'RNim3HommUzlabsDCi1NrQ',
-            user: 'ibrahim-carto'
-           });
+                    total_sum = e.features[0].variables.area._properties.area
 
-        }
+                    source2 = new carto.source.SQL(`SELECT * FROM (SELECT  *, SUM(area) OVER (ORDER BY area) total FROM world_borders WHERE name <> 'Antarctica') a WHERE total <=` + total_sum, {
+                        apiKey: 'RNim3HommUzlabsDCi1NrQ',
+                        user: 'ibrahim-carto'
+                    });
 
-      const viz2 = new carto.Viz(`
+                }
+
+                const viz2 = new carto.Viz(`
         color: opacity(Black,0.7)
         strokeWidth: 1
         strokeColor: Gold
       `);
 
-      layer2.update(source2, viz2);
-    }
-    catch(err) {
+                layer2.update(source2, viz2);
+            } catch (err) {
 
-      console.log(err)
-      const viz2 = new carto.Viz(`
+                console.log(err)
+                const viz2 = new carto.Viz(`
         filter: false
       `);
 
-      layer2.update(source2, viz2);
+                layer2.update(source2, viz2);
 
-    }
+            }
 
-    });
+        });
 
-    function hideLoader() {
-      document.getElementById('loader').style.opacity = '0';
-    }
+        function hideLoader() {
+            document.getElementById('loader').style.opacity = '0';
+        }
 
-    function resetLayer(){
-      const viz2 = new carto.Viz(`
+        function resetLayer() {
+            const viz2 = new carto.Viz(`
         filter: false
       `);
 
-      layer2.update(source2, viz2);
-    }
-  </script>
+            layer2.update(source2, viz2);
+        }
+    </script>
 
 
-</body></html>
+</body>
+
+</html>
